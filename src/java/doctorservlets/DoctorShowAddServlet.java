@@ -5,7 +5,6 @@
  */
 package doctorservlets;
 
-import dbhelpers.DoctorHelper;
 import dbhelpers.SpecializationHelper;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -15,14 +14,13 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import logic.Doctor;
 
 /**
  *
- * @author Интернет
+ * @author 1310119
  */
-@WebServlet(name = "EditFormMakerServlet", urlPatterns = {"/EditFormMakerServlet"})
-public class EditFormMakerServlet extends HttpServlet {
+@WebServlet(name = "DoctorShowAddServlet", urlPatterns = {"/DoctorShowAddServlet"})
+public class DoctorShowAddServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -35,44 +33,43 @@ public class EditFormMakerServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String strDocId = request.getParameter("editBtn");
-        int id = Integer.valueOf(strDocId);
-        DoctorHelper helper = DoctorHelper.getInstance();
-        Doctor doctor = helper.selectDoctor(id);  
-        SpecializationHelper specHelper = SpecializationHelper.getInstance();
-        List<String> specList = specHelper.selectSpecs();
+        response.setContentType("text/html;charset=UTF-8");
+        SpecializationHelper helper = SpecializationHelper.getInstance();
+        List<String> specList = helper.selectSpecs();
         StringBuilder options = new StringBuilder();
         for(String spec : specList) {
             options.append("<option>" + spec + "</option>");
         }
-        response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Редагування доктора</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<form method=\"post\" onsubmit='return validate(this);'>\n" +
+            /* TODO output your page here. You may use following sample code. */
+            out.println("<!DOCTYPE html>\n" +
+"<html>\n" +
+"    <head>\n" +
+"        <title>Додавання лікаря</title>\n" +
+"        <meta charset=\"utf-8\">\n" +
+"        <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n" +
+"    </head>\n" +
+"    <body>\n" +
+"        <form method=\"post\" onsubmit='return validate(this);'>\n" +
 "            <table>\n" +
 "                <tr>\n" +
 "                    <td>Ім'я</td>\n" +
-"                    <td><input type=\"text\" name=\"name\" value=\""+ doctor.getName() + "\"/></td>\n" +
+"                    <td><input type=\"text\" name=\"name\"/></td>\n" +
 "                </tr>\n" +
 "                <tr>\n" +
 "                    <td>Прізвище</td>\n" +
-"                    <td><input type=\"text\" name=\"surname\" value=\""+ doctor.getSurname() + "\"/></td>\n" +
+"                    <td><input type=\"text\" name=\"surname\"/></td>\n" +
 "                </tr>\n" +
 "                <tr>\n" +
 "                    <td>Спеціалізація</td>\n" +
 "                    <td><select name=\"spec\">" +
                      options + 
 "                    </select>" + 
-"                    </td>\n" + "\"/></td>\n" +
+"                    </td>\n" +
 "                </tr>\n" +
 "                <tr>\n" +
 "                    <td></td>\n" +
-"                    <td><button formaction=\"DoctorEditServlet\" name=\"editBtn\" value=\"" + id +  "\">Зберегти зміни</button></td>\n" +
+"                    <td><input type=\"submit\" formaction=\"DoctorAddServletProxy\" value=\"Додати лікаря\"></td>\n" +
 "                </tr>\n" +
 "            </table>            \n" +
 "        </form>\n" +
@@ -85,20 +82,21 @@ public class EditFormMakerServlet extends HttpServlet {
 "                var validated = true;\n" +
 "\n" +
 "                for (var i = 0; i < text_fields.length; i++) {\n" +
-"                    if (text_fields[i].type != 'submit') {\n" +
+"                    if (text_fields[i].type != 'submit' && text_fields[i].name != 'spec') {\n" +
 "                        validated = validated && (text_fields[i].value !== '');\n" +
 "                    }\n" +
 "                }                \n" +
 "\n" +
 "                if (!validated) {\n" +
-"                    alert('Заповність всі поля');\n" +
+"                    alert('Заповність ім\\'я та прізвище доктора');\n" +
 "                }\n" +
 "                \n" +
 "                return validated;\n" +
 "            }\n" +
-"        </script>");
-            out.println("</body>");
-            out.println("</html>");
+"        </script>\n" +
+"    </body>\n" +
+"    \n" +
+"</html>");
         }
     }
 

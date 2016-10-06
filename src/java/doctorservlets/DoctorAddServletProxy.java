@@ -33,7 +33,7 @@ public class DoctorAddServletProxy extends HttpServlet {
             throws ServletException, IOException {
         String spec = request.getParameter("spec");
         if(spec.equals("")) {
-            spec = "Сімейний лікар";
+            spec = "Family doctor";
         }
         request.setAttribute("spec", spec);
         request.getRequestDispatcher("DoctorAddServlet").forward(request, response);

@@ -8,6 +8,8 @@ package doctorservlets;
 import dbhelpers.DoctorHelper;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -36,7 +38,7 @@ public class DoctorAddServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String name = request.getParameter("name");
+        String name = request.getParameter("name");        
         String surname = request.getParameter("surname");
         String spec = (String) request.getAttribute("spec");
         System.out.println("name: " + name);
@@ -44,6 +46,7 @@ public class DoctorAddServlet extends HttpServlet {
         Doctor doctor = new Doctor(name, surname, spec);
         boolean isAdded = true;
         String strError = null;
+        
         try {
             helper.addDoctor(doctor);
         } catch (SQLException ex) {

@@ -39,6 +39,7 @@ public class DoctorHelper extends DBHelper {
             + "'" + doctor.getSpecialization() + "')";
        
         statement.executeUpdate(query);
+        
                 
 //        String selectQuery = "SELECT Id from Doctors";        
 //        try {

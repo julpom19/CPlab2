@@ -15,9 +15,9 @@ import java.sql.SQLException;
  */
 public class DBConnectionHelper {
     private static String driver = "com.mysql.jdbc.Driver";
-    private static String dbName = "jdbc:mysql://127.0.0.1:3306/hospital6";
-    private static String username = "root";
-    private static String password = "";
+    private static String dbName = "jdbc:mysql://192.168.100.240:3306/hospitalDB";
+    private static String username = "user";
+    private static String password = "user";
     public static Connection getDBConnection() {
         try {
             Class.forName(driver);

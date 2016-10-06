@@ -41,24 +41,24 @@ public class DoctorSelectServlet extends HttpServlet {
         out.println("<!DOCTYPE html>");
         out.println("<html>");
         out.println("<head>");
-        out.println("<title>Список докторів</title>");            
+        out.println("<title>Doctors</title>");            
         out.println("</head>");
         out.println("<body>");
         if(list == null) {
             out.println("<h2>");
-            out.println("У таблиці Доктори не має жодного запису!");
+            out.println("Table Doctors doesn't have records!");
             out.println("</h2>");
         } else {           
             out.println("<h2>");
-            out.println("Список докторів:");
+            out.println("Doctors:");
             out.println("</h2>");
             out.println("<table border=\"1\">");
             out.println("<tr>");
             out.println("<th>Id</th>");            
-            out.println("<th>Ім'я</th>"); 
-            out.println("<th>Прізвище</th>"); 
-            out.println("<th>Спеціалізація</th>"); 
-            out.println("<th>Управління</th>"); 
+            out.println("<th>Name</th>"); 
+            out.println("<th>Surname</th>"); 
+            out.println("<th>Specialization</th>"); 
+            out.println("<th></th>"); 
             out.println("</tr>");
             for(Doctor doctor: list) {
                 out.println("</tr>");
@@ -68,8 +68,8 @@ public class DoctorSelectServlet extends HttpServlet {
                 out.println("<td>"+ doctor.getSpecialization() +"</td>"); 
                 out.println("<td>"); 
                 out.println("<form method=\"post\">");
-                out.println("<button formaction = \"EditFormMakerServlet\" name = \"editBtn\" value = \"" + doctor.getId() + "\">Редагувати</button>");
-                out.println("<button formaction = \"DoctorDeleteServlet\" name = \"deleteBtn\" value = \"" + doctor.getId() + "\">Видалити</button>");
+                out.println("<button formaction = \"EditFormMakerServlet\" name = \"editBtn\" value = \"" + doctor.getId() + "\">Edit</button>");
+                out.println("<button formaction = \"DoctorDeleteServlet\" name = \"deleteBtn\" value = \"" + doctor.getId() + "\">Delete</button>");
                 //out.println("<input type=\"button\" onClick='location.href=\"http://index.html/\"' value=\"Редагувати\">");
                 //out.println("<input type=\"button\" onClick='location.href=\"http://index.html/\"' value=\"Видалити\">");
                 out.println("</form>");
@@ -78,7 +78,7 @@ public class DoctorSelectServlet extends HttpServlet {
             }  
             out.println("</table>");
             out.println("<form>");
-            out.println("<input type=\"button\" onClick='location.href=\"add_doctor.html\"' value=\"Додати лікаря\">");
+            out.println("<button formaction = \"DoctorShowAddServlet\">Add doctor</button>"); 
             out.println("</form>");
             out.println();
         }
