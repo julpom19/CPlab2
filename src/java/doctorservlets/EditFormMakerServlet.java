@@ -8,9 +8,6 @@ package doctorservlets;
 import dbhelpers.DoctorHelper;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -22,8 +19,8 @@ import logic.Doctor;
  *
  * @author Интернет
  */
-@WebServlet(name = "DoctorAddServlet", urlPatterns = {"/DoctorAddServlet", "/addDoctor.html"})
-public class DoctorAddServlet extends HttpServlet {
+@WebServlet(name = "EditFormMakerServlet", urlPatterns = {"/EditFormMakerServlet"})
+public class EditFormMakerServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -36,38 +33,59 @@ public class DoctorAddServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String name = request.getParameter("name");
-        String surname = request.getParameter("surname");
-        String spec = (String) request.getAttribute("spec");
-        System.out.println("name: " + name);
+        String strDocId = request.getParameter("editBtn");
+        int id = Integer.valueOf(strDocId);
         DoctorHelper helper = DoctorHelper.getInstance();
-        Doctor doctor = new Doctor(name, surname, spec);
-        boolean isAdded = true;
-        String strError = null;
-        try {
-            helper.addDoctor(doctor);
-        } catch (SQLException ex) {
-            isAdded = false;   
-            strError = ex.getMessage();
-        }
+        Doctor doctor = helper.selectDoctor(id);        
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {     
+        try (PrintWriter out = response.getWriter()) {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Додавання доктора</title>");            
+            out.println("<title>Редагування доктора</title>");            
             out.println("</head>");
             out.println("<body>");
-            if(isAdded) {
-                out.println("<h1>Доктора " + doctor.getName() + " " + doctor.getSurname() + 
-                        " було успішно додано</h1>");
-            } else {
-                out.println("<h1>Помилка додавання</h1>");
-                out.println(strError);
-            }
-            out.println("<form method=\"post\" action=\"DoctorSelectServlet\">\n" +
-                        "<input type=\"submit\" value=\"Повернутися до списку докторів\">\n" +
-                        "</form>");
+            out.println("<form method=\"post\" onsubmit='return validate(this);'>\n" +
+"            <table>\n" +
+"                <tr>\n" +
+"                    <td>Ім'я</td>\n" +
+"                    <td><input type=\"text\" name=\"name\" value=\""+ doctor.getName() + "\"/></td>\n" +
+"                </tr>\n" +
+"                <tr>\n" +
+"                    <td>Прізвище</td>\n" +
+"                    <td><input type=\"text\" name=\"surname\" value=\""+ doctor.getSurname() + "\"/></td>\n" +
+"                </tr>\n" +
+"                <tr>\n" +
+"                    <td>Спеціалізація</td>\n" +
+"                    <td><input type=\"text\" name=\"spec\" value=\""+ doctor.getSpecialization() + "\"/></td>\n" +
+"                </tr>\n" +
+"                <tr>\n" +
+"                    <td></td>\n" +
+"                    <td><button formaction=\"DoctorEditServlet\" name=\"editBtn\" value=\"" + id +  "\">Зберегти зміни</button></td>\n" +
+"                </tr>\n" +
+"            </table>            \n" +
+"        </form>\n" +
+"        <form name=\"returnForm\" method=\"post\" action=\"DoctorSelectServlet\">\n" +
+"            <input type=\"submit\" value=\"Повернутись до списку лікарів\">\n" +
+"        </form>\n" +
+"        <script>\n" +
+"            function validate(form) {\n" +
+"                var text_fields = form.getElementsByTagName('input');\n" +
+"                var validated = true;\n" +
+"\n" +
+"                for (var i = 0; i < text_fields.length; i++) {\n" +
+"                    if (text_fields[i].type != 'submit') {\n" +
+"                        validated = validated && (text_fields[i].value !== '');\n" +
+"                    }\n" +
+"                }                \n" +
+"\n" +
+"                if (!validated) {\n" +
+"                    alert('Заповність всі поля');\n" +
+"                }\n" +
+"                \n" +
+"                return validated;\n" +
+"            }\n" +
+"        </script>");
             out.println("</body>");
             out.println("</html>");
         }

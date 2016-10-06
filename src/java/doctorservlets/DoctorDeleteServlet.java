@@ -22,8 +22,8 @@ import logic.Doctor;
  *
  * @author Интернет
  */
-@WebServlet(name = "DoctorAddServlet", urlPatterns = {"/DoctorAddServlet", "/addDoctor.html"})
-public class DoctorAddServlet extends HttpServlet {
+@WebServlet(name = "DoctorDeleteServlet", urlPatterns = {"/DoctorDeleteServlet"})
+public class DoctorDeleteServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -36,34 +36,29 @@ public class DoctorAddServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String name = request.getParameter("name");
-        String surname = request.getParameter("surname");
-        String spec = (String) request.getAttribute("spec");
-        System.out.println("name: " + name);
+        String strDocId = request.getParameter("deleteBtn");
+        int id = Integer.valueOf(strDocId);
         DoctorHelper helper = DoctorHelper.getInstance();
-        Doctor doctor = new Doctor(name, surname, spec);
-        boolean isAdded = true;
-        String strError = null;
-        try {
-            helper.addDoctor(doctor);
+        Doctor doctor = helper.selectDoctor(id);
+        boolean isDeleted = true;
+        try { 
+            helper.deleteDoctor(doctor);
         } catch (SQLException ex) {
-            isAdded = false;   
-            strError = ex.getMessage();
+            isDeleted = false;
         }
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {     
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Додавання доктора</title>");            
+            out.println("<title>Видалення доктора</title>");            
             out.println("</head>");
             out.println("<body>");
-            if(isAdded) {
+            if(isDeleted) {
                 out.println("<h1>Доктора " + doctor.getName() + " " + doctor.getSurname() + 
-                        " було успішно додано</h1>");
+                        " було успішно видалено</h1>");
             } else {
-                out.println("<h1>Помилка додавання</h1>");
-                out.println(strError);
+                out.println("<h1>Помилка видалення</h1>");
             }
             out.println("<form method=\"post\" action=\"DoctorSelectServlet\">\n" +
                         "<input type=\"submit\" value=\"Повернутися до списку докторів\">\n" +

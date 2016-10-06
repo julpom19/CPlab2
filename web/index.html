@@ -11,14 +11,23 @@ and open the template in the editor.
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
     <body>
-        <form method="post" action="PatientSelectServlet">
-            <input type="submit" value="Показати список пацієнтів">
-        </form>
-        <form method="post" action="DoctorSelectServlet">
-            <input type="submit" value="Показати список докторів">
-        </form>
-        <form method="post" action="VisitSelectServlet">
-            <input type="submit" value="Показати журнал відвідувань">
-        </form>
+        <h3>Список довідників</h3>
+        <ul>
+            <li>
+                <form method="post" action="PatientSelectServlet">
+                    <input type="submit" value="Показати список пацієнтів">
+                </form>
+            </li>
+            <li>
+                <form method="post" action="DoctorSelectServlet">
+                    <input type="submit" value="Показати список докторів">
+                </form>
+            </li>
+            <li>
+                <form method="post" action="VisitSelectServlet">
+                    <input type="submit" value="Показати журнал відвідувань">
+                </form>
+            </li>
+        </ul>
     </body>
 </html>

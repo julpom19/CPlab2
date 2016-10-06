@@ -2,30 +2,51 @@
 <html>
     <head>
         <title>Додавання лікаря</title>
-        <meta charset="UTF-8">
+        <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
     <body>
-        <form method="post" action="PatientSelectServlet">
-			<table>
-				<tr>
-					<td>Ім'я</td>
-					<td><input type="text" name="name"/></td>
-				</tr>
-				<tr>
-					<td>Прізвище</td>
-					<td><input type="text" name="surname"/></td>
-				</tr>
-				<tr>
-					<td>Спеціалізація</td>
-					<td><input type="text" name="spec"/></td>
-				</tr>
-				<tr>
-					<td></td>
-					<td><input type="submit" value="Показати список пацієнтів"></td>
-				</tr>
-			</table>
-            
+        <form method="post" onsubmit='return validate(this);'>
+            <table>
+                <tr>
+                    <td>Ім'я</td>
+                    <td><input type="text" name="name"/></td>
+                </tr>
+                <tr>
+                    <td>Прізвище</td>
+                    <td><input type="text" name="surname"/></td>
+                </tr>
+                <tr>
+                    <td>Спеціалізація</td>
+                    <td><input type="text" name="spec"/></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><input type="submit" formaction="DoctorAddServletProxy" value="Додати лікаря"></td>
+                </tr>
+            </table>            
         </form>
+        <form name="returnForm" method="post" action="DoctorSelectServlet">
+            <input type="submit" value="Повернутись до списку лікарів">
+        </form>
+        <script>
+            function validate(form) {
+                var text_fields = form.getElementsByTagName('input');
+                var validated = true;
+
+                for (var i = 0; i < text_fields.length; i++) {
+                    if (text_fields[i].type != 'submit' && text_fields[i].name != 'spec') {
+                        validated = validated && (text_fields[i].value !== '');
+                    }
+                }                
+
+                if (!validated) {
+                    alert('Заповність ім\'я та прізвище доктора');
+                }
+                
+                return validated;
+            }
+        </script>
     </body>
+    
 </html>

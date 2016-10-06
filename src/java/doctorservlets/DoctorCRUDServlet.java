@@ -5,25 +5,20 @@
  */
 package doctorservlets;
 
-import dbhelpers.DoctorHelper;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import logic.Doctor;
 
 /**
  *
  * @author Интернет
  */
-@WebServlet(name = "DoctorAddServlet", urlPatterns = {"/DoctorAddServlet", "/addDoctor.html"})
-public class DoctorAddServlet extends HttpServlet {
+@WebServlet(name = "DoctorCRUDServlet", urlPatterns = {"/DoctorCRUDServlet"})
+public class DoctorCRUDServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -36,40 +31,20 @@ public class DoctorAddServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String name = request.getParameter("name");
-        String surname = request.getParameter("surname");
-        String spec = (String) request.getAttribute("spec");
-        System.out.println("name: " + name);
-        DoctorHelper helper = DoctorHelper.getInstance();
-        Doctor doctor = new Doctor(name, surname, spec);
-        boolean isAdded = true;
-        String strError = null;
-        try {
-            helper.addDoctor(doctor);
-        } catch (SQLException ex) {
-            isAdded = false;   
-            strError = ex.getMessage();
-        }
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {     
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Додавання доктора</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            if(isAdded) {
-                out.println("<h1>Доктора " + doctor.getName() + " " + doctor.getSurname() + 
-                        " було успішно додано</h1>");
-            } else {
-                out.println("<h1>Помилка додавання</h1>");
-                out.println(strError);
-            }
-            out.println("<form method=\"post\" action=\"DoctorSelectServlet\">\n" +
-                        "<input type=\"submit\" value=\"Повернутися до списку докторів\">\n" +
-                        "</form>");
-            out.println("</body>");
-            out.println("</html>");
+        String action = request.getParameter("action");
+        switch(action) {
+            case "select" :
+                request.getRequestDispatcher("DoctorSelectServlet").forward(request, response);
+                break;
+            case "add" :
+                request.getRequestDispatcher("DoctorAddServlet").forward(request, response);
+                break;
+            case "edit" :
+                request.getRequestDispatcher("DoctorEditServlet").forward(request, response);
+                break;
+            case "delete" :
+                request.getRequestDispatcher("DoctorDeleteServlet").forward(request, response);
+                break;
         }
     }
 

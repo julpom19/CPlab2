@@ -38,35 +38,52 @@ public class DoctorSelectServlet extends HttpServlet {
         DoctorHelper helper = DoctorHelper.getInstance();
         List<Doctor> list = helper.selectDoctors();
         PrintWriter out = response.getWriter();
+        out.println("<!DOCTYPE html>");
+        out.println("<html>");
+        out.println("<head>");
+        out.println("<title>Список докторів</title>");            
+        out.println("</head>");
+        out.println("<body>");
         if(list == null) {
             out.println("<h2>");
             out.println("У таблиці Доктори не має жодного запису!");
             out.println("</h2>");
-        } else {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Список докторів</title>");            
-            out.println("</head>");
-            out.println("<body>");
+        } else {           
             out.println("<h2>");
             out.println("Список докторів:");
             out.println("</h2>");
-            out.println("<ol>");
+            out.println("<table border=\"1\">");
+            out.println("<tr>");
+            out.println("<th>Id</th>");            
+            out.println("<th>Ім'я</th>"); 
+            out.println("<th>Прізвище</th>"); 
+            out.println("<th>Спеціалізація</th>"); 
+            out.println("<th>Управління</th>"); 
+            out.println("</tr>");
             for(Doctor doctor: list) {
-                out.println("<li>");
-                out.println(doctor);
-                out.println("</li>");
-            }
-            out.println("</ol>");
+                out.println("</tr>");
+                out.println("<td>"+ doctor.getId() +"</td>"); 
+                out.println("<td>"+ doctor.getName() +"</td>"); 
+                out.println("<td>"+ doctor.getSurname() +"</td>"); 
+                out.println("<td>"+ doctor.getSpecialization() +"</td>"); 
+                out.println("<td>"); 
+                out.println("<form method=\"post\">");
+                out.println("<button formaction = \"EditFormMakerServlet\" name = \"editBtn\" value = \"" + doctor.getId() + "\">Редагувати</button>");
+                out.println("<button formaction = \"DoctorDeleteServlet\" name = \"deleteBtn\" value = \"" + doctor.getId() + "\">Видалити</button>");
+                //out.println("<input type=\"button\" onClick='location.href=\"http://index.html/\"' value=\"Редагувати\">");
+                //out.println("<input type=\"button\" onClick='location.href=\"http://index.html/\"' value=\"Видалити\">");
+                out.println("</form>");
+                out.println("</td>"); 
+                out.println("<tr>");
+            }  
+            out.println("</table>");
             out.println("<form>");
-            out.println("<input type=\"button\" onClick='location.href=\"http://index.html/\"' value=\"Додати лікаря\">");
+            out.println("<input type=\"button\" onClick='location.href=\"add_doctor.html\"' value=\"Додати лікаря\">");
             out.println("</form>");
             out.println();
-            out.println("</body>");
-            out.println("</html>");
         }
+        out.println("</body>");
+        out.println("</html>");
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

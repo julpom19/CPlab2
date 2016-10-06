@@ -27,7 +27,7 @@ public class DoctorHelper extends DBHelper {
         return dbHelper;
     }
     
-    public void addDoctor(Doctor doctor) {
+    public void addDoctor(Doctor doctor) throws SQLException {
         Statement statement = getStatement();
         if(statement == null) {
             return;
@@ -37,26 +37,35 @@ public class DoctorHelper extends DBHelper {
             + "('" + doctor.getName() + "',"
             + "'" + doctor.getSurname() + "',"
             + "'" + doctor.getSpecialization() + "')";
-        try {
-            statement.executeUpdate(query);
-        } catch (SQLException ex) {
-            System.out.println("Failed to add " + doctor.getName() + " " + doctor.getSurname());
-            Logger.getLogger(PatientHelper.class.getName()).log(Level.SEVERE, null, ex);
+       
+        statement.executeUpdate(query);
+                
+//        String selectQuery = "SELECT Id from Doctors";        
+//        try {
+//            ResultSet rs = statement.executeQuery(selectQuery);        
+//            int id = -1;
+//            while (rs.next()) {
+//                id = rs.getInt("Id");
+//            }
+//            if(id > 0) {
+//                doctor.setId(id);
+//            }            
+//        } catch (SQLException ex) {
+//            Logger.getLogger(PatientHelper.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+    }
+    
+    public void updateDoctor(int id, String name, String surname, String spec) throws SQLException {
+        Statement statement = getStatement();
+        if(statement == null) {
             return;
-        }        
-        String selectQuery = "SELECT Id from Doctors";        
-        try {
-            ResultSet rs = statement.executeQuery(selectQuery);        
-            int id = -1;
-            while (rs.next()) {
-                id = rs.getInt("Id");
-            }
-            if(id > 0) {
-                doctor.setId(id);
-            }            
-        } catch (SQLException ex) {
-            Logger.getLogger(PatientHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
+        String query = "UPDATE Doctors SET "
+            + "Name = '" + name + "',"
+            + "Surname = '" + surname + "',"
+            + "Specialization = '" + spec + "'"
+            + "WHERE Id = " + id;        
+        statement.execute(query);
     }
     
     public void updateDoctor(Doctor doctor) {
@@ -77,18 +86,22 @@ public class DoctorHelper extends DBHelper {
         }
     }
     
-    public void deleteDoctor(Doctor doctor) {
+    public void deleteDoctor(Doctor doctor) throws SQLException {
         Statement statement = getStatement();
         if(statement == null) {
             return;
         }
         String query = "DELETE FROM Doctors WHERE Id = " + doctor.getId();
-        try {
-            statement.execute(query);
-        } catch (SQLException ex) {
-            System.out.println("Failed to delete " + doctor.getName() + " " + doctor.getSurname());
-            Logger.getLogger(PatientHelper.class.getName()).log(Level.SEVERE, null, ex);
+        statement.execute(query);
+    }
+    
+    public void deleteDoctor(int id) throws SQLException {
+        Statement statement = getStatement();
+        if(statement == null) {
+            return;
         }
+        String query = "DELETE FROM Doctors WHERE Id = " + id;
+        statement.execute(query);
     }
     
     public List<Doctor> selectDoctors() {        
@@ -113,6 +126,28 @@ public class DoctorHelper extends DBHelper {
             return null;
         } 
         return list;
+    }
+    
+    public Doctor selectDoctor(int id) {
+        Statement statement = getStatement();
+        if(statement == null) {
+            return null;
+        }
+        Doctor doctor = null;
+        String selectQuery = "SELECT Name, Surname, Specialization from Doctors WHERE Id = " + id;   
+        try {
+            ResultSet rs = statement.executeQuery(selectQuery);        
+            while (rs.next()) {                
+                String name = rs.getString("Name");
+                String surname = rs.getString("Surname");
+                String spec = rs.getString("Specialization");
+                doctor = new Doctor(id, name, surname, spec);
+            }       
+        } catch (SQLException ex) {
+            Logger.getLogger(PatientHelper.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        } 
+        return doctor;
     }
     
     
